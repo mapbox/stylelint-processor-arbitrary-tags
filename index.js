@@ -4,6 +4,12 @@ const execall = require('execall');
 const splitLines = require('split-lines');
 const reindent = require('./lib/reindent');
 
+const ignoredRules = new Set([
+  // We don't want to reject files just because they
+  // have no CSS
+  'no-empty-source',
+]);
+
 const sourceToLineMap = new Map();
 
 module.exports = function (options) {
@@ -36,7 +42,7 @@ module.exports = function (options) {
         });
       }
 
-      extractedCode += bodyText + '\n\n';
+      extractedCode += bodyText.replace(/\s*$/, '\n\n');
       currentExtractedCodeLine += 1;
     });
 
@@ -46,12 +52,21 @@ module.exports = function (options) {
 
   function transformResult(result, filepath) {
     const extractedToSourceLineMap = sourceToLineMap.get(filepath);
-    result.warnings.forEach((warning) => {
-      if (!warning.line) return;
+    const newWarnings = result.warnings.reduce((memo, warning) => {
+      if (ignoredRules.has(warning.rule)) return memo;
+
       const warningSourceMap = extractedToSourceLineMap.get(warning.line);
-      warning.line = warningSourceMap.line;
-      warning.column = warning.column + warningSourceMap.indentColumns;
-    });
+      if (warning.line) {
+        warning.line = extractedToSourceLineMap.get(warning.line);
+      }
+      if (warning.column) {
+        warning.column = warning.column + warningSourceMap.indentColumns;
+      }
+      memo.push(warning);
+      return memo;
+    }, []);
+
+    return Object.assign(result, { warnings: newWarnings });
   }
 
   return {

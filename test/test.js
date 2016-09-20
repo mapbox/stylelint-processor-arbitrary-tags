@@ -34,7 +34,7 @@ const markdownExpectedWarnings = [
 test('markdown', (t) => {
   const fixture = path.join(__dirname, './fixtures/markdown.md');
   stylelint.lint({
-    files: [fixture],
+    files: fixture,
     config: {
       processors: [pathToProcessor],
       rules: {
