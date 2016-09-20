@@ -1,0 +1,38 @@
+{
+  "name": "stylelint-processor-arbitrary-tags",
+  "version": "0.1.0",
+  "description": "A stylelint processor that allows you to lint CSS within arbitrary tags",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "tap": "tap test/test.js",
+    "test": "npm run tap && npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mapbox/stylelint-processor-arbitrary-tags.git"
+  },
+  "keywords": [
+    "stylelint",
+    "stylelint-processor"
+  ],
+  "author": "Mapbox",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mapbox/stylelint-processor-arbitrary-tags/issues"
+  },
+  "homepage": "https://github.com/mapbox/stylelint-processor-arbitrary-tags#readme",
+  "devDependencies": {
+    "eslint": "^3.4.0",
+    "eslint-config-davidtheclark-node": "^0.1.1",
+    "eslint-plugin-node": "^2.0.0",
+    "lodash": "^4.16.0",
+    "stylelint": "^7.3.0",
+    "tap": "^7.0.0"
+  },
+  "dependencies": {
+    "execall": "^1.0.0",
+    "split-lines": "^1.1.0",
+    "strip-indent": "^2.0.0"
+  }
+}
