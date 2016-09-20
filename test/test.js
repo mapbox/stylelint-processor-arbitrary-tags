@@ -7,6 +7,15 @@ const path = require('path');
 
 const pathToProcessor = path.join(__dirname, '../index.js');
 
+const config = {
+  processors: [pathToProcessor],
+  rules: {
+    'block-no-empty': true,
+    indentation: 2,
+    'max-empty-lines': 1,
+  },
+};
+
 const markdownExpectedWarnings = [
   {
     line: 11,
@@ -35,13 +44,7 @@ test('markdown', (t) => {
   const fixture = path.join(__dirname, './fixtures/markdown.md');
   stylelint.lint({
     files: fixture,
-    config: {
-      processors: [pathToProcessor],
-      rules: {
-        'block-no-empty': true,
-        indentation: 2,
-      },
-    },
+    config,
   }).then((data) => {
     t.equal(data.results.length, 1, 'number of results');
     const result = data.results[0];
@@ -93,13 +96,7 @@ test('html', (t) => {
   const fixture = path.join(__dirname, './fixtures/html.html');
   stylelint.lint({
     files: [fixture],
-    config: {
-      processors: [pathToProcessor],
-      rules: {
-        'block-no-empty': true,
-        indentation: 2,
-      },
-    },
+    config,
   }).then((data) => {
     t.equal(data.results.length, 1, 'number of results');
     const result = data.results[0];
@@ -115,13 +112,7 @@ test('markdown and html', (t) => {
   const fixtureTwo = path.join(__dirname, './fixtures/html.html');
   stylelint.lint({
     files: [fixtureOne, fixtureTwo],
-    config: {
-      processors: [pathToProcessor],
-      rules: {
-        'block-no-empty': true,
-        indentation: 2,
-      },
-    },
+    config,
   }).then((data) => {
     t.equal(data.results.length, 2, 'number of results');
 

@@ -18,21 +18,22 @@ module.exports = function (options) {
   options.endTag = options.endTag || '</\\s*?style>';
   options.body = options.body || '[\\s\\S]*?';
 
-  const snippetRegexp = new RegExp(`(${options.startTag})(${options.body})${options.endTag}`, 'g');
+  const snippetRegexp = new RegExp(`(${options.startTag})(${options.body})\\s*${options.endTag}`, 'g');
 
-  function transformCode(code, filepath) {
+  function transformCode(sourceCode, filepath) {
     const extractedToSourceLineMap = new Map();
     let extractedCode = '';
     let currentExtractedCodeLine = 0;
 
-    execall(snippetRegexp, code).forEach((match) => {
-      const openingTag = match.sub[0];
+    execall(snippetRegexp, sourceCode).forEach((match) => {
       const reindentData = reindent(match.sub[1]);
-      const bodyText = reindentData.text;
-      if (!bodyText) return;
+      const chunkCode = reindentData.text;
+      if (!chunkCode) return;
 
-      const startLine = splitLines(code.slice(0, match.index + openingTag.length)).length;
-      const linesWithin = splitLines(bodyText).length;
+      const openingTag = match.sub[0];
+      const startIndex = match.index + openingTag.length;
+      const startLine = splitLines(sourceCode.slice(0, startIndex)).length;
+      const linesWithin = splitLines(chunkCode).length;
 
       for (let i = 0; i < linesWithin; i++) {
         currentExtractedCodeLine += 1;
@@ -42,8 +43,7 @@ module.exports = function (options) {
         });
       }
 
-      extractedCode += bodyText + '\n\n';
-      currentExtractedCodeLine += 1;
+      extractedCode += chunkCode + '\n';
     });
 
     sourceToLineMap.set(filepath, extractedToSourceLineMap);
