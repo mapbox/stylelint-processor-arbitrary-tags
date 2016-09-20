@@ -14,7 +14,7 @@ const sourceToLineMap = new Map();
 
 module.exports = function (options) {
   options = options || {};
-  options.startTag = options.startTag || '\\<style[\\s\\S]*?>';
+  options.startTag = options.startTag || '[^`\'"]<style[\\s\\S]*?>';
   options.endTag = options.endTag || '</\\s*?style>';
   options.body = options.body || '[\\s\\S]*?';
 
