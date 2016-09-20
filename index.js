@@ -42,7 +42,7 @@ module.exports = function (options) {
         });
       }
 
-      extractedCode += bodyText.replace(/\s*$/, '\n\n');
+      extractedCode += bodyText + '\n\n';
       currentExtractedCodeLine += 1;
     });
 
@@ -57,7 +57,7 @@ module.exports = function (options) {
 
       const warningSourceMap = extractedToSourceLineMap.get(warning.line);
       if (warning.line) {
-        warning.line = extractedToSourceLineMap.get(warning.line);
+        warning.line = warningSourceMap.line;
       }
       if (warning.column) {
         warning.column = warning.column + warningSourceMap.indentColumns;
