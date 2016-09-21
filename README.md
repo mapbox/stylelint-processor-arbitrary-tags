@@ -6,7 +6,7 @@ A [stylelint processor](http://stylelint.io/user-guide/configuration/#processors
 
 The module uses a regular expression to identify code within the specified tags, then passes the code on to stylelint.
 
-By default, it looks for code within `<style>` tags.
+By default, it looks for code within `<style>` tags (see default options below). But you can change the regular expression to find code within other tags, like `{% highlight css %}...{% endhighlight %}` for Jekyll templates, or `/* start css */.../* end css */` within a JS file, or who knows what else.
 
 ## Options
 
@@ -14,7 +14,7 @@ By default, it looks for code within `<style>` tags.
 
 Type: `string` that's RegExp-ready
 
-Default: `'\\<style[\\s\\S]*?>'`
+Default: `'[^`\'"]<style[\\s\\S]*?>`
 
 ### endTag
 
