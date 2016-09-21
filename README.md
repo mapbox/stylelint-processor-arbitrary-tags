@@ -14,16 +14,25 @@ By default, it looks for code within `<style>` tags (see default options below).
 
 Type: `string` that's RegExp-ready
 
-Default: `'[^`\'"]<style[\\s\\S]*?>`
+Default:
+```
+'[^`\'"]<style[\\s\\S]*?>'
+```
 
 ### endTag
 
 Type: `string` that's RegExp-ready
 
-Default: `'</\\s*?style>'`
+Default:
+```
+'</\\s*?style>'
+```
 
 ### body
 
 Type: `string` that's RegExp-ready
 
-Default: `'[\\s\\S]*?'`
+Default:
+```
+'[\\s\\S]*?'
+```
