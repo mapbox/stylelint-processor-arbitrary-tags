@@ -43,6 +43,33 @@ Default:
 '[\\s\\S]*?'
 ```
 
+### filterExtensions
+
+Type: `array<string>` that's the file extension list that are allowed to be
+processed. This enable you to create different settings for HTML and markdown,
+for instance.
+
+
+Default:
+```js
+[
+  '.erb',
+  '.handelbars',
+  '.hbs',
+  '.htm',
+  '.html',
+  '.mustache',
+  '.nunjucks',
+  '.php',
+  '.tag',
+  '.twig',
+  '.vue',
+  '.we',
+  '.xhtml',
+  '.xml',
+]
+```
+
 ## Caveats
 
 **Do not use this processor with the `no-empty-source` rule**. If you do, you will have warnings whenever a file does not contain any matches for your regular expression.
