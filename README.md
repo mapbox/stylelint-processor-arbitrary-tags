@@ -54,7 +54,7 @@ Default:
 ```js
 [
   '.erb',
-  '.handelbars',
+  '.handlebars',
   '.hbs',
   '.htm',
   '.html',
