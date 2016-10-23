@@ -14,7 +14,7 @@ module.exports = function (options) {
   options.body = options.body || '[\\s\\S]*?';
   options.filterExtensions = options.filterExtensions || [
     '.erb',
-    '.handelbars',
+    '.handlebars',
     '.hbs',
     '.htm',
     '.html',
