@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "tap": "tap test/test.js",
+    "tap": "tap test",
     "test": "npm run tap && npm run lint"
   },
   "repository": {

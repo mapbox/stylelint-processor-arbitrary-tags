@@ -8,7 +8,7 @@ const path = require('path');
 const pathToProcessor = path.join(__dirname, '../index.js');
 
 const config = {
-  processors: [pathToProcessor],
+  processors: [[pathToProcessor, { filterExtensions: ['.md', '.html'] }]],
   rules: {
     'block-no-empty': true,
     indentation: 2,
@@ -161,6 +161,7 @@ test('liquid, custom tags', (t) => {
   const options = {
     startTag: '\\{%\\s*highlight css\\s*%\\}',
     endTag: '\\{%\\s*endhighlight\\s*%\\}',
+    filterExtensions: ['.md'],
   };
 
   stylelint.lint({
@@ -201,4 +202,36 @@ test('vue', (t) => {
     });
     t.end();
   }).catch(t.end);
+});
+
+const unparsedHtmlExpectedWarnings = [
+  {
+    line: 15,
+    column: 12,
+    rule: 'CssSyntaxError',
+    severity: 'error',
+    text: 'Unknown word (CssSyntaxError)',
+  },
+];
+
+test('unfiltered files should not go through the processor', (t) => {
+  const fixtureOne = path.join(__dirname, './fixtures/markdown.md');
+  const fixtureTwo = path.join(__dirname, './fixtures/html.html');
+  stylelint.lint({
+    files: [fixtureOne, fixtureTwo],
+    config: {
+      processors: [[pathToProcessor, { filterExtensions: ['.md'] }]],
+      rules: config.rules,
+    },
+  }).then((data) => {
+    t.equal(data.results.length, 2, 'number of results');
+
+    t.equal(data.results[0].source, fixtureOne);
+    t.deepEqual(_.orderBy(data.results[0].warnings, ['line', 'column']), markdownExpectedWarnings);
+
+    t.equal(data.results[1].source, fixtureTwo);
+    t.deepEqual(_.orderBy(data.results[1].warnings, ['line', 'column']), unparsedHtmlExpectedWarnings);
+
+    t.end();
+  }).catch(t.threw);
 });

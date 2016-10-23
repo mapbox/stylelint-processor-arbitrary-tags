@@ -3,6 +3,7 @@
 const execall = require('execall');
 const splitLines = require('split-lines');
 const reindent = require('./lib/reindent');
+const getFileExt = require('./lib/get-file-ext');
 
 const sourceToLineMap = new Map();
 
@@ -11,10 +12,38 @@ module.exports = function (options) {
   options.startTag = options.startTag || '[^`\'"]<style[\\s\\S]*?>';
   options.endTag = options.endTag || '</\\s*?style>';
   options.body = options.body || '[\\s\\S]*?';
+  options.filterExtensions = options.filterExtensions || [
+    '.erb',
+    '.handelbars',
+    '.hbs',
+    '.htm',
+    '.html',
+    '.mustache',
+    '.nunjucks',
+    '.php',
+    '.tag',
+    '.twig',
+    '.vue',
+    '.we',
+    '.xhtml',
+    '.xml',
+  ];
 
   const snippetRegexp = new RegExp(`(${options.startTag})(${options.body})\\s*${options.endTag}`, 'g');
 
+  /**
+  * Checks whether the given extension is allowed by extension filter
+  */
+  function isExtensionProcessable(filepath) {
+    const fileExt = getFileExt(filepath);
+    return options.filterExtensions.findIndex((ext) => ext === fileExt) !== -1;
+  }
+
   function transformCode(sourceCode, filepath) {
+    if (!isExtensionProcessable(filepath)) {
+      return sourceCode;
+    }
+
     const extractedToSourceLineMap = new Map();
     let extractedCode = '';
     let currentExtractedCodeLine = 0;
@@ -45,6 +74,10 @@ module.exports = function (options) {
   }
 
   function transformResult(result, filepath) {
+    if (!isExtensionProcessable(filepath)) {
+      return;
+    }
+
     const extractedToSourceLineMap = sourceToLineMap.get(filepath);
     const newWarnings = result.warnings.reduce((memo, warning) => {
       const warningSourceMap = extractedToSourceLineMap.get(warning.line);
