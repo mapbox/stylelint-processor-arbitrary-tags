@@ -51,7 +51,7 @@ test('markdown', (t) => {
     t.equal(result.source, fixture, 'filename');
     t.deepEqual(_.orderBy(result.warnings, ['line', 'column']), markdownExpectedWarnings);
     t.end();
-  }).catch(t.threw);
+  }).catch(t.end);
 });
 
 const htmlExpectedWarnings = [
@@ -104,7 +104,7 @@ test('html', (t) => {
 
     t.deepEqual(_.orderBy(result.warnings, ['line', 'column']), htmlExpectedWarnings);
     t.end();
-  }).catch(t.threw);
+  }).catch(t.end);
 });
 
 test('markdown and html', (t) => {
@@ -123,7 +123,19 @@ test('markdown and html', (t) => {
     t.deepEqual(_.orderBy(data.results[1].warnings, ['line', 'column']), htmlExpectedWarnings);
 
     t.end();
-  }).catch(t.threw);
+  }).catch(t.end);
+});
+
+test('actual css', (t) => {
+  const fixture = path.join(__dirname, './fixtures/css.css');
+  stylelint.lint({
+    files: [fixture],
+    config,
+  }).then((data) => {
+    t.equal(data.results.length, 1, 'number of results');
+    t.equal(data.results.warnings().length, 0, 'no warnings');
+    t.end();
+  }).catch(t.end);
 });
 
 const liquidExpectedWarnings = [
@@ -166,5 +178,5 @@ test('liquid, custom tags', (t) => {
     t.equal(result.source, fixture, 'filename');
     t.deepEqual(_.orderBy(result.warnings, ['line', 'column']), liquidExpectedWarnings);
     t.end();
-  }).catch(t.threw);
+  }).catch(t.end);
 });
