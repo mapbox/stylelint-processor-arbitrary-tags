@@ -180,3 +180,25 @@ test('liquid, custom tags', (t) => {
     t.end();
   }).catch(t.end);
 });
+
+test('vue', (t) => {
+  const fixture = path.join(__dirname, './fixtures/vue.vue');
+  stylelint.lint({
+    files: [fixture],
+    config: {
+      processors: [pathToProcessor],
+      rules: {
+        'selector-no-type': true,
+        indentation: 2,
+      },
+    },
+  }).then((data) => {
+    t.equal(data.results.length, 1, 'number of results');
+    const result = data.results[0];
+    t.equal(result.source, fixture, 'filename');
+    result.warnings.forEach((warning) => {
+      t.equal(warning.rule, 'selector-no-type');
+    });
+    t.end();
+  }).catch(t.end);
+});
