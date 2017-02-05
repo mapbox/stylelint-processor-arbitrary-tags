@@ -12,22 +12,7 @@ module.exports = function (options) {
   options.startTag = options.startTag || '[^`\'"]<style[\\s\\S]*?>';
   options.endTag = options.endTag || '</\\s*?style>';
   options.body = options.body || '[\\s\\S]*?';
-  options.filterExtensions = options.filterExtensions || [
-    '.erb',
-    '.handlebars',
-    '.hbs',
-    '.htm',
-    '.html',
-    '.mustache',
-    '.nunjucks',
-    '.php',
-    '.tag',
-    '.twig',
-    '.vue',
-    '.we',
-    '.xhtml',
-    '.xml',
-  ];
+  options.filterExtensions = options.filterExtensions || [];
 
   const snippetRegexp = new RegExp(`(${options.startTag})(${options.body})\\s*${options.endTag}`, 'g');
 
@@ -35,6 +20,10 @@ module.exports = function (options) {
   * Checks whether the given extension is allowed by extension filter
   */
   function isExtensionProcessable(filepath) {
+    if (options.filterExtensions.length === 0) {
+      return true;
+    }
+
     const fileExt = getFileExt(filepath);
     return options.filterExtensions.findIndex((ext) => ext === fileExt) !== -1;
   }

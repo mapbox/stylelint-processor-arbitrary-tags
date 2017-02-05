@@ -217,6 +217,7 @@ const unparsedHtmlExpectedWarnings = [
 test('unfiltered files should not go through the processor', (t) => {
   const fixtureOne = path.join(__dirname, './fixtures/markdown.md');
   const fixtureTwo = path.join(__dirname, './fixtures/html.html');
+
   stylelint.lint({
     files: [fixtureOne, fixtureTwo],
     config: {
@@ -231,6 +232,24 @@ test('unfiltered files should not go through the processor', (t) => {
 
     t.equal(data.results[1].source, fixtureTwo);
     t.deepEqual(_.orderBy(data.results[1].warnings, ['line', 'column']), unparsedHtmlExpectedWarnings);
+
+    t.end();
+  }).catch(t.threw);
+});
+
+test('all extensions are processed when filterExtensions is blank', (t) => {
+  const fixtureOne = path.join(__dirname, './fixtures/markdown.md');
+  const fixtureTwo = path.join(__dirname, './fixtures/html.html');
+  const fixtureThree = path.join(__dirname, './fixtures/liquid.md');
+
+  stylelint.lint({
+    files: [fixtureOne, fixtureTwo, fixtureThree],
+    config: {
+      processors: [[pathToProcessor, { filterExtensions: [] }]],
+      rules: config.rules,
+    },
+  }).then((data) => {
+    t.equal(data.results.length, 3, 'number of results');
 
     t.end();
   }).catch(t.threw);

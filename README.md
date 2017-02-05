@@ -52,22 +52,7 @@ for instance.
 
 Default:
 ```js
-[
-  '.erb',
-  '.handlebars',
-  '.hbs',
-  '.htm',
-  '.html',
-  '.mustache',
-  '.nunjucks',
-  '.php',
-  '.tag',
-  '.twig',
-  '.vue',
-  '.we',
-  '.xhtml',
-  '.xml',
-]
+[]
 ```
 
 ## Caveats
