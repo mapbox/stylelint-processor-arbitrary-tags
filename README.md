@@ -42,3 +42,7 @@ Default:
 ```
 '[\\s\\S]*?'
 ```
+
+## Caveats
+
+**Do not use this processor with the `no-empty-source` rule**. If you do, you will have warnings whenever a file does not contain any matches for your regular expression.

@@ -4,12 +4,6 @@ const execall = require('execall');
 const splitLines = require('split-lines');
 const reindent = require('./lib/reindent');
 
-const ignoredRules = new Set([
-  // We don't want to reject files just because they
-  // have no CSS
-  'no-empty-source',
-]);
-
 const sourceToLineMap = new Map();
 
 module.exports = function (options) {
@@ -53,8 +47,6 @@ module.exports = function (options) {
   function transformResult(result, filepath) {
     const extractedToSourceLineMap = sourceToLineMap.get(filepath);
     const newWarnings = result.warnings.reduce((memo, warning) => {
-      if (ignoredRules.has(warning.rule)) return memo;
-
       const warningSourceMap = extractedToSourceLineMap.get(warning.line);
       if (warning.line) {
         warning.line = warningSourceMap.line;
