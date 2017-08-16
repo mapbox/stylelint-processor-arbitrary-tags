@@ -1,5 +1,6 @@
 'use strict';
 
+const path = require('path');
 const execall = require('execall');
 const splitLines = require('split-lines');
 const reindent = require('./lib/reindent');
@@ -40,12 +41,12 @@ module.exports = function (options) {
       extractedCode += chunkCode + '\n';
     });
 
-    sourceToLineMap.set(filepath, extractedToSourceLineMap);
+    sourceToLineMap.set(path.normalize(filepath), extractedToSourceLineMap);
     return extractedCode;
   }
 
   function transformResult(result, filepath) {
-    const extractedToSourceLineMap = sourceToLineMap.get(filepath);
+    const extractedToSourceLineMap = sourceToLineMap.get(path.normalize(filepath));
     const newWarnings = result.warnings.reduce((memo, warning) => {
       const warningSourceMap = extractedToSourceLineMap.get(warning.line);
       if (warning.line) {
