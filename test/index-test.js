@@ -8,7 +8,7 @@ const path = require('path');
 const pathToProcessor = path.join(__dirname, '../index.js');
 
 const config = {
-  processors: [[pathToProcessor, { filterExtensions: ['.md', '.html'] }]],
+  processors: [[pathToProcessor, { fileFilterRegex: [/\.md$/, /\.html$/] }]],
   rules: {
     'block-no-empty': true,
     indentation: 2,
@@ -161,7 +161,7 @@ test('liquid, custom tags', (t) => {
   const options = {
     startTag: '\\{%\\s*highlight css\\s*%\\}',
     endTag: '\\{%\\s*endhighlight\\s*%\\}',
-    filterExtensions: ['.md'],
+    fileFilterRegex: [/\.md$/],
   };
 
   stylelint.lint({
@@ -214,14 +214,14 @@ const unparsedHtmlExpectedWarnings = [
   },
 ];
 
-test('unfiltered files should not go through the processor', (t) => {
+test('files that don\'t match the regex filter should not pass through the processor', (t) => {
   const fixtureOne = path.join(__dirname, './fixtures/markdown.md');
   const fixtureTwo = path.join(__dirname, './fixtures/html.html');
 
   stylelint.lint({
     files: [fixtureOne, fixtureTwo],
     config: {
-      processors: [[pathToProcessor, { filterExtensions: ['.md'] }]],
+      processors: [[pathToProcessor, { fileFilterRegex: [/\.md$/] }]],
       rules: config.rules,
     },
   }).then((data) => {
@@ -237,7 +237,7 @@ test('unfiltered files should not go through the processor', (t) => {
   }).catch(t.threw);
 });
 
-test('all extensions are processed when filterExtensions is blank', (t) => {
+test('all extensions are processed when fileFilterRegex is blank', (t) => {
   const fixtureOne = path.join(__dirname, './fixtures/markdown.md');
   const fixtureTwo = path.join(__dirname, './fixtures/html.html');
   const fixtureThree = path.join(__dirname, './fixtures/liquid.md');
@@ -245,7 +245,7 @@ test('all extensions are processed when filterExtensions is blank', (t) => {
   stylelint.lint({
     files: [fixtureOne, fixtureTwo, fixtureThree],
     config: {
-      processors: [[pathToProcessor, { filterExtensions: [] }]],
+      processors: [[pathToProcessor, { fileFilterRegex: [] }]],
       rules: config.rules,
     },
   }).then((data) => {

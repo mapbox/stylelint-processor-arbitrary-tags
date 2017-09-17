@@ -43,12 +43,12 @@ Default:
 '[\\s\\S]*?'
 ```
 
-### filterExtensions
+### fileFilterRegex
 
-Type: `array<string>` that's the file extension list that are allowed to be
-processed. This enable you to create different settings for HTML and markdown,
-for instance.
-
+Type: `array<RegExp>` that's an array of RegExp that you want to limit to pass
+through this filter. This is useful when you want to create different settings
+for HTML and markdown, for instance. When empty (`[]`) it will disable this
+setting, and every file will pass through this module.
 
 Default:
 ```js
