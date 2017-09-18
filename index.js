@@ -47,13 +47,19 @@ module.exports = function (options) {
   function transformResult(result, filepath) {
     const extractedToSourceLineMap = sourceToLineMap.get(filepath);
     const newWarnings = result.warnings.reduce((memo, warning) => {
+      // This might end up rendering to null when there's no content on the
+      // file being parsed. It's likely that it has been flagged due a
+      // `no-empty-source` rule.
       const warningSourceMap = extractedToSourceLineMap.get(warning.line);
-      if (warning.line) {
+
+      if (warning.line && warningSourceMap) {
         warning.line = warningSourceMap.line;
       }
-      if (warning.column) {
+
+      if (warning.column && warningSourceMap) {
         warning.column = warning.column + warningSourceMap.indentColumns;
       }
+
       memo.push(warning);
       return memo;
     }, []);

@@ -202,3 +202,24 @@ test('vue', (t) => {
     t.end();
   }).catch(t.end);
 });
+
+test('empty files with no-empty-source rule should be parsed', (t) => {
+  const fixture = path.join(__dirname, './fixtures/empty-file.html');
+  stylelint.lint({
+    files: [fixture],
+    config: {
+      processors: [pathToProcessor],
+      rules: {
+        'no-empty-source': true,
+      },
+    },
+  }).then((data) => {
+    t.equal(data.results.length, 1, 'number of results');
+    const result = data.results[0];
+    t.equal(result.source, fixture, 'filename');
+    result.warnings.forEach((warning) => {
+      t.equal(warning.rule, 'no-empty-source');
+    });
+    t.end();
+  }).catch(t.threw);
+});
