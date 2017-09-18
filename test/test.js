@@ -51,7 +51,7 @@ test('markdown', (t) => {
     t.equal(result.source, fixture, 'filename');
     t.deepEqual(_.orderBy(result.warnings, ['line', 'column']), markdownExpectedWarnings);
     t.end();
-  }).catch(t.end);
+  }).catch(t.threw);
 });
 
 const htmlExpectedWarnings = [
@@ -104,7 +104,7 @@ test('html', (t) => {
 
     t.deepEqual(_.orderBy(result.warnings, ['line', 'column']), htmlExpectedWarnings);
     t.end();
-  }).catch(t.end);
+  }).catch(t.threw);
 });
 
 test('markdown and html', (t) => {
@@ -123,7 +123,7 @@ test('markdown and html', (t) => {
     t.deepEqual(_.orderBy(data.results[1].warnings, ['line', 'column']), htmlExpectedWarnings);
 
     t.end();
-  }).catch(t.end);
+  }).catch(t.threw);
 });
 
 test('actual css', (t) => {
@@ -133,9 +133,9 @@ test('actual css', (t) => {
     config,
   }).then((data) => {
     t.equal(data.results.length, 1, 'number of results');
-    t.equal(data.results.warnings().length, 0, 'no warnings');
+    t.equal(data.results[0].warnings.length, 0, 'no warnings');
     t.end();
-  }).catch(t.end);
+  }).catch(t.threw);
 });
 
 const liquidExpectedWarnings = [
@@ -178,7 +178,7 @@ test('liquid, custom tags', (t) => {
     t.equal(result.source, fixture, 'filename');
     t.deepEqual(_.orderBy(result.warnings, ['line', 'column']), liquidExpectedWarnings);
     t.end();
-  }).catch(t.end);
+  }).catch(t.threw);
 });
 
 test('vue', (t) => {
@@ -200,7 +200,7 @@ test('vue', (t) => {
       t.equal(warning.rule, 'selector-no-type');
     });
     t.end();
-  }).catch(t.end);
+  }).catch(t.threw);
 });
 
 test('empty files with no-empty-source rule should be parsed', (t) => {
