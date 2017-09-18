@@ -8,7 +8,7 @@ const path = require('path');
 const pathToProcessor = path.join(__dirname, '../index.js');
 
 const config = {
-  processors: [[pathToProcessor, { fileFilterRegex: [/\.md$/, /\.html$/] }]],
+  processors: [[pathToProcessor, { fileFilterRegex: [] }]],
   rules: {
     'block-no-empty': true,
     indentation: 2,
@@ -214,7 +214,7 @@ const unparsedHtmlExpectedWarnings = [
   },
 ];
 
-test('files that don\'t match the regex filter should not pass through the processor', (t) => {
+test('only files that match the regex filter should pass through the processor', (t) => {
   const fixtureOne = path.join(__dirname, './fixtures/markdown.md');
   const fixtureTwo = path.join(__dirname, './fixtures/html.html');
 
@@ -240,16 +240,21 @@ test('files that don\'t match the regex filter should not pass through the proce
 test('all extensions are processed when fileFilterRegex is blank', (t) => {
   const fixtureOne = path.join(__dirname, './fixtures/markdown.md');
   const fixtureTwo = path.join(__dirname, './fixtures/html.html');
-  const fixtureThree = path.join(__dirname, './fixtures/liquid.md');
 
   stylelint.lint({
-    files: [fixtureOne, fixtureTwo, fixtureThree],
+    files: [fixtureOne, fixtureTwo],
     config: {
       processors: [[pathToProcessor, { fileFilterRegex: [] }]],
       rules: config.rules,
     },
   }).then((data) => {
-    t.equal(data.results.length, 3, 'number of results');
+    t.equal(data.results.length, 2, 'number of results');
+
+    t.equal(data.results[0].source, fixtureOne);
+    t.deepEqual(_.orderBy(data.results[0].warnings, ['line', 'column']), markdownExpectedWarnings);
+
+    t.equal(data.results[1].source, fixtureTwo);
+    t.deepEqual(_.orderBy(data.results[1].warnings, ['line', 'column']), htmlExpectedWarnings);
 
     t.end();
   }).catch(t.threw);
