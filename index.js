@@ -11,10 +11,26 @@ module.exports = function (options) {
   options.startTag = options.startTag || '[^`\'"]<style[\\s\\S]*?>';
   options.endTag = options.endTag || '</\\s*?style>';
   options.body = options.body || '[\\s\\S]*?';
+  options.fileFilterRegex = options.fileFilterRegex || [];
 
   const snippetRegexp = new RegExp(`(${options.startTag})(${options.body})\\s*${options.endTag}`, 'g');
 
+  /**
+  * Checks whether the given file is allowed by the filter
+  */
+  function isFileProcessable(filepath) {
+    if (options.fileFilterRegex.length === 0) {
+      return true;
+    }
+
+    return options.fileFilterRegex.some((regex) => filepath.match(regex) !== null);
+  }
+
   function transformCode(sourceCode, filepath) {
+    if (!isFileProcessable(filepath)) {
+      return sourceCode;
+    }
+
     const extractedToSourceLineMap = new Map();
     let extractedCode = '';
     let currentExtractedCodeLine = 0;
@@ -45,6 +61,10 @@ module.exports = function (options) {
   }
 
   function transformResult(result, filepath) {
+    if (!isFileProcessable(filepath)) {
+      return;
+    }
+
     const extractedToSourceLineMap = sourceToLineMap.get(filepath);
     const newWarnings = result.warnings.reduce((memo, warning) => {
       // This might end up rendering to null when there's no content on the

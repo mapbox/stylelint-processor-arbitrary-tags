@@ -161,6 +161,7 @@ test('liquid, custom tags', (t) => {
   const options = {
     startTag: '\\{%\\s*highlight css\\s*%\\}',
     endTag: '\\{%\\s*endhighlight\\s*%\\}',
+    fileFilterRegex: [/\.md$/],
   };
 
   stylelint.lint({
@@ -220,6 +221,91 @@ test('empty files with no-empty-source rule should be parsed', (t) => {
     result.warnings.forEach((warning) => {
       t.equal(warning.rule, 'no-empty-source');
     });
+    t.end();
+  }).catch(t.threw);
+});
+
+const unparsedHtmlExpectedWarnings = [
+  {
+    line: 15,
+    column: 12,
+    rule: 'CssSyntaxError',
+    severity: 'error',
+    text: 'Unknown word (CssSyntaxError)',
+  },
+];
+
+test('only files matching the regex filter should pass through the processor', (t) => {
+  const fixtureOne = path.join(__dirname, './fixtures/markdown.md');
+  const fixtureTwo = path.join(__dirname, './fixtures/html.html');
+
+  stylelint.lint({
+    files: [fixtureOne, fixtureTwo],
+    config: {
+      processors: [[pathToProcessor, { fileFilterRegex: [/\.md$/] }]],
+      rules: config.rules,
+    },
+  }).then((data) => {
+    t.equal(data.results.length, 2, 'number of results');
+
+    t.equal(data.results[0].source, fixtureOne);
+    t.deepEqual(_.orderBy(data.results[0].warnings, ['line', 'column']), markdownExpectedWarnings);
+
+    t.equal(data.results[1].source, fixtureTwo);
+    t.deepEqual(_.orderBy(data.results[1].warnings, ['line', 'column']), unparsedHtmlExpectedWarnings);
+
+    t.end();
+  }).catch(t.threw);
+});
+
+test('only files matching the regex filters should pass through the processor', (t) => {
+  const fixtureOne = path.join(__dirname, './fixtures/markdown.md');
+  const fixtureTwo = path.join(__dirname, './fixtures/vue.vue');
+  const fixtureThree = path.join(__dirname, './fixtures/html.html');
+
+  stylelint.lint({
+    files: [fixtureOne, fixtureTwo, fixtureThree],
+    config: {
+      processors: [[pathToProcessor, { fileFilterRegex: [/\.md$/, /\.vue$/] }]],
+      rules: config.rules,
+    },
+  }).then((data) => {
+    t.equal(data.results.length, 3, 'number of results');
+
+    t.equal(data.results[0].source, fixtureOne);
+    t.deepEqual(_.orderBy(data.results[0].warnings, ['line', 'column']), markdownExpectedWarnings);
+
+    t.equal(data.results[1].source, fixtureTwo);
+    data.results[1].warnings.forEach((warning) => {
+      t.equal(warning.rule, 'selector-no-type');
+    });
+
+    t.equal(data.results[2].source, fixtureThree);
+    t.deepEqual(_.orderBy(data.results[2].warnings, ['line', 'column']), unparsedHtmlExpectedWarnings);
+
+    t.end();
+  }).catch(t.threw);
+});
+
+test('all extensions are processed when fileFilterRegex is blank', (t) => {
+  const fixtureOne = path.join(__dirname, './fixtures/markdown.md');
+  const fixtureTwo = path.join(__dirname, './fixtures/html.html');
+
+  stylelint.lint({
+    files: [fixtureOne, fixtureTwo],
+    config: {
+      processors: [[pathToProcessor, { fileFilterRegex: [] }]],
+      rules: config.rules,
+    },
+  }).then((data) => {
+    t.equal(data.results.length, 2, 'number of results');
+
+    t.equal(data.results[0].source, fixtureOne);
+    t.deepEqual(_.orderBy(data.results[0].warnings, ['line', 'column']), markdownExpectedWarnings);
+
+    t.equal(data.results[1].source, fixtureTwo);
+    t.deepEqual(_.orderBy(data.results[1].warnings, ['line', 'column']), htmlExpectedWarnings);
+
     t.end();
   }).catch(t.threw);
 });

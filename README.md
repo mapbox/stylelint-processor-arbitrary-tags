@@ -43,6 +43,18 @@ Default:
 '[\\s\\S]*?'
 ```
 
+### fileFilterRegex
+
+Type: `array<RegExp>` that's an array of RegExp that you want to limit to pass
+through this filter. This is useful when you want to create different settings
+for HTML and markdown, for instance. When empty (`[]`) it will disable this
+setting, and every file will pass through this module.
+
+Default:
+```js
+[]
+```
+
 ## Caveats
 
 **Do not use this processor with the `no-empty-source` rule**. If you do, you will have warnings whenever a file does not contain any matches for your regular expression.
