@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/stylelint-processor-arbitrary-tags",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A stylelint processor that allows you to lint CSS within arbitrary tags",
   "main": "index.js",
   "scripts": {
