@@ -23,7 +23,7 @@ module.exports = function (options) {
       return true;
     }
 
-    return options.fileFilterRegex.findIndex((regex) => filepath.match(regex) !== null) !== -1;
+    return options.fileFilterRegex.some((regex) => filepath.match(regex) !== null);
   }
 
   function transformCode(sourceCode, filepath) {
