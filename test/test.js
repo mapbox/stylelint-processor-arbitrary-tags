@@ -189,7 +189,7 @@ test('vue', (t) => {
     config: {
       processors: [pathToProcessor],
       rules: {
-        'selector-no-type': true,
+        'selector-max-type': 0,
         indentation: 2,
       },
     },
@@ -198,7 +198,7 @@ test('vue', (t) => {
     const result = data.results[0];
     t.equal(result.source, fixture, 'filename');
     result.warnings.forEach((warning) => {
-      t.equal(warning.rule, 'selector-no-type');
+      t.equal(warning.rule, 'selector-max-type');
     });
     t.end();
   }).catch(t.threw);
