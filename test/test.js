@@ -204,6 +204,28 @@ test('vue', (t) => {
   }).catch(t.threw);
 });
 
+test('vue2', (t) => {
+  const fixture = path.join(__dirname, './fixtures/vue2.vue');
+  stylelint.lint({
+    files: [fixture],
+    config: {
+      processors: [pathToProcessor],
+      rules: {
+        'selector-max-type': 0,
+        indentation: 2,
+      },
+    },
+  }).then((data) => {
+    t.equal(data.results.length, 1, 'number of results');
+    const result = data.results[0];
+    t.equal(result.source, fixture, 'filename');
+    result.warnings.forEach((warning) => {
+      t.equal(warning.rule, 'selector-max-type');
+    });
+    t.end();
+  }).catch(t.threw);
+});
+
 test('empty files with no-empty-source rule should be parsed', (t) => {
   const fixture = path.join(__dirname, './fixtures/empty-file.html');
   stylelint.lint({
