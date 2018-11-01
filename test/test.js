@@ -309,6 +309,29 @@ test('only files matching the regex filters should pass through the processor', 
   }).catch(t.threw);
 });
 
+test('only files matching the regex string filter should pass through the processor', (t) => {
+  const fixtureOne = path.join(__dirname, './fixtures/markdown.md');
+  const fixtureTwo = path.join(__dirname, './fixtures/html.html');
+
+  stylelint.lint({
+    files: [fixtureOne, fixtureTwo],
+    config: {
+      processors: [[pathToProcessor, { fileFilterRegex: ['\.md$'] }]],
+      rules: config.rules,
+    },
+  }).then((data) => {
+    t.equal(data.results.length, 2, 'number of results');
+
+    t.equal(data.results[0].source, fixtureOne);
+    t.deepEqual(_.orderBy(data.results[0].warnings, ['line', 'column']), markdownExpectedWarnings);
+
+    t.equal(data.results[1].source, fixtureTwo);
+    t.deepEqual(_.orderBy(data.results[1].warnings, ['line', 'column']), unparsedHtmlExpectedWarnings);
+
+    t.end();
+  }).catch(t.threw);
+});
+
 test('all extensions are processed when fileFilterRegex is blank', (t) => {
   const fixtureOne = path.join(__dirname, './fixtures/markdown.md');
   const fixtureTwo = path.join(__dirname, './fixtures/html.html');

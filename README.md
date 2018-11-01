@@ -45,13 +45,20 @@ Default:
 
 ### fileFilterRegex
 
-Type: `array<RegExp>` that's an array of regular expressions describe files that you want to be processed with this module.
+Type: `array<RegExp|string>` that's an array of regular expressions or strings that describe files that you want to be processed with this module.
 Matches will be processed; files that do not match will not be.
 
 Given the following value, only `.html` files will be processed:
 
 ```js
 fileFilterRegex: [/\.html$/]
+```
+
+You can also use regular expression strings instead of regular expression literals. This is necessary if you are using yaml-based configuration and can't use regular expression literals. Yaml variant of example above:
+
+```yaml
+  - fileFilterRegex:
+    - '\.html$'
 ```
 
 This is useful when you want to create different settings for HTML and markdown, for instance.
