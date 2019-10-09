@@ -5,6 +5,7 @@ const splitLines = require('split-lines');
 const reindent = require('./lib/reindent');
 
 const sourceToLineMap = new Map();
+const key = 'mappings';
 
 module.exports = function (options) {
   options = options || {};
@@ -19,7 +20,7 @@ module.exports = function (options) {
   * Checks whether the given file is allowed by the filter
   */
   function isFileProcessable(filepath) {
-    if (options.fileFilterRegex.length === 0) {
+    if (options.fileFilterRegex.length === 0 || filepath === undefined) {
       return true;
     }
 
@@ -56,7 +57,7 @@ module.exports = function (options) {
       extractedCode += chunkCode + '\n';
     });
 
-    sourceToLineMap.set(filepath, extractedToSourceLineMap);
+    sourceToLineMap.set(key, extractedToSourceLineMap);
     return extractedCode;
   }
 
@@ -65,7 +66,7 @@ module.exports = function (options) {
       return;
     }
 
-    const extractedToSourceLineMap = sourceToLineMap.get(filepath);
+    const extractedToSourceLineMap = sourceToLineMap.get(key);
     const newWarnings = result.warnings.reduce((memo, warning) => {
       // This might end up rendering to null when there's no content on the
       // file being parsed. It's likely that it has been flagged due a
