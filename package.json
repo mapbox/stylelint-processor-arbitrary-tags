@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/mapbox/stylelint-processor-arbitrary-tags#readme",
   "devDependencies": {
-    "eslint": "^3.4.0",
+    "eslint": "^4.18.2",
     "eslint-config-davidtheclark-node": "^0.2.0",
     "eslint-plugin-node": "^3.0.5",
     "lodash": "^4.16.0",
