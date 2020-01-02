@@ -316,7 +316,7 @@ test('only files matching the regex string filter should pass through the proces
   stylelint.lint({
     files: [fixtureOne, fixtureTwo],
     config: {
-      processors: [[pathToProcessor, { fileFilterRegex: ['\.md$'] }]],
+      processors: [[pathToProcessor, { fileFilterRegex: ['.md$'] }]],
       rules: config.rules,
     },
   }).then((data) => {
