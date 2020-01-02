@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+
+- Update travis and package.json to use Node 10, remove yarn, update tap and eslint to fix security alerts.
+
 ## 0.2.0
 
 - Add `fileFilterRegex` option.
