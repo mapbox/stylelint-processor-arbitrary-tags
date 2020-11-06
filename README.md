@@ -1,6 +1,6 @@
 # stylelint-processor-arbitrary-tags
 
-[![Build Status](https://travis-ci.org/mapbox/stylelint-processor-arbitrary-tags.svg?branch=main)](https://travis-ci.org/mapbox/stylelint-processor-arbitrary-tags)
+[![Build Status](https://travis-ci.com/mapbox/stylelint-processor-arbitrary-tags.svg?branch=main)](https://travis-ci.com/mapbox/stylelint-processor-arbitrary-tags)
 
 A [stylelint processor](http://stylelint.io/user-guide/configuration/#processors) that allows you to lint CSS within arbitrary tags.
 
